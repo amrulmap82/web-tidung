@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kalkulator HPP Cerdas - Hitung Harga Pokok Produksi dengan mudah dan akurat">
+    <meta name="theme-color" content="#1e3a5f">
+    <title>Kalkulator HPP Cerdas</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231e3a5f' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='bold' fill='%23fff' text-anchor='middle' dominant-baseline='middle'>₹</text></svg>">
+    <link rel="stylesheet" href="styles_v2.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M2 12h20M7 7h10v10H7z"></path>
+                    </svg>
+                    <h1>KALKULATOR HPP CERDAS</h1>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn active" data-tab="calculator">Kalkulator</button>
+                    <button class="nav-btn" data-tab="info">Informasi</button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tab Kalkulator -->
+            <section id="calculator-tab" class="tab-content active">
+                <div class="calculator-wrapper">
+                    <!-- Sidebar -->
+                    <aside class="sidebar">
+                        <!-- Produk Section -->
+                        <div class="sidebar-section">
+                            <h2>Produk</h2>
+                            <form id="product-form" class="form">
+                                <div class="form-group">
+                                    <label for="product-name">Nama Produk</label>
+                                    <input type="text" id="product-name" placeholder="Contoh: Kue Brownies" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="product-weight">Berat/Jumlah</label>
+                                        <input type="number" id="product-weight" placeholder="100" min="0.01" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-unit">Satuan</label>
+                                        <select id="product-unit" required>
+                                            <option value="">-- Pilih --</option>
+                                            <option value="g">Gram (g)</option>
+                                            <option value="kg">Kilogram (kg)</option>
+                                            <option value="ml">Mililiter (ml)</option>
+                                            <option value="l">Liter (l)</option>
+                                            <option value="unit">Unit</option>
+                                            <option value="pcs">Pieces (pcs)</option>
+                                            <option value="box">Box</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="custom-unit-group" style="display: none;">
+                                    <label for="custom-unit">Nama Satuan Custom</label>
+                                    <input type="text" id="custom-unit" placeholder="Contoh: Loyang">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Tambah Produk</button>
+                            </form>
+                        </div>
+
+                        <!-- Daftar Produk -->
+                        <div class="sidebar-section">
+                            <h2>Daftar Produk</h2>
+                            <div id="products-list" class="products-list">
+                                <p class="empty-state">Belum ada produk</p>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Main Area -->
+                    <section class="main-area">
+                        <div id="no-product-state" class="no-product-state">
+                            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6M12 16h.01"></path>
+                            </svg>
+                            <h3>Pilih atau Buat Produk</h3>
+                            <p>Mulai dengan menambahkan produk baru di sebelah kiri.</p>
+                        </div>
+
+                        <div id="product-detail" class="product-detail" style="display: none;">
+                            <!-- Product Header -->
+                            <div class="product-header">
+                                <div>
+                                    <h2 id="detail-product-name"></h2>
+                                    <p id="detail-product-info" class="product-info"></p>
+                                </div>
+                                <button id="delete-product-btn" class="btn btn-danger">Hapus Produk</button>
+                            </div>
+
+                            <!-- Tabs untuk sections -->
+                            <div class="detail-tabs">
+                                <button class="detail-tab-btn active" data-section="ingredients">Bahan Baku</button>
+                                <button class="detail-tab-btn" data-section="packaging">Kemasan</button>
+                                <button class="detail-tab-btn" data-section="calculation">Kalkulasi HPP</button>
+                                <button class="detail-tab-btn" data-section="recommendations">Rekomendasi</button>
+                            </div>
+
+                            <!-- Section: Bahan Baku -->
+                            <div id="section-ingredients" class="detail-section active">
+                                <h3>Bahan Baku</h3>
+                                <form id="ingredient-form" class="form">
+                                    <div class="form-group">
+                                        <label for="ingredient-name">Nama Bahan</label>
+                                        <input type="text" id="ingredient-name" placeholder="Contoh: Tepung Terigu" required>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="ingredient-shop">Toko Pembeli</label>
+                                            <input type="text" id="ingredient-shop" placeholder="Contoh: Toko Maju">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ingredient-price-unit">Harga per 1 Buah</label>
+                                            <div class="input-group">
+                                                <span class="currency">Rp</span>
+                                                <input type="number" id="ingredient-price-unit" placeholder="0" min="0" step="0.01">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="ingredient-quantity">Jumlah Digunakan</label>
+                                            <input type="number" id="ingredient-quantity" placeholder="0" min="0" step="0.01" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ingredient-unit">Satuan</label>
+                                            <select id="ingredient-unit" required>
+                                                <option value="">-- Pilih --</option>
+                                                <option value="g">Gram (g)</option>
+                                                <option value="kg">Kilogram (kg)</option>
+                                                <option value="ml">Mililiter (ml)</option>
+                                                <option value="l">Liter (l)</option>
+                                                <option value="unit">Unit</option>
+                                                <option value="pcs">Pieces (pcs)</option>
+                                                <option value="box">Box</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="ingredient-stock">Stok Tersisa</label>
+                                            <input type="number" id="ingredient-stock" placeholder="0" min="0" step="0.01" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ingredient-min-stock">Stok Minimal</label>
+                                            <input type="number" id="ingredient-min-stock" placeholder="0" min="0" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Tambah Bahan</button>
+                                </form>
+
+                                <!-- Tabel Bahan Baku -->
+                                <div class="ingredients-table-section">
+                                    <h4>Daftar Bahan Baku</h4>
+                                    <div id="ingredients-table-container" class="table-container">
+                                        <table id="ingredients-table" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Bahan</th>
+                                                    <th>Toko</th>
+                                                    <th>Harga/Buah</th>
+                                                    <th>Qty</th>
+                                                    <th>Satuan</th>
+                                                    <th>Stok</th>
+                                                    <th>Harga/Bagian</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ingredients-tbody"></tbody>
+                                        </table>
+                                    </div>
+                                    <div id="no-ingredients" class="empty-state">Belum ada bahan baku</div>
+                                </div>
+                            </div>
+
+                            <!-- Section: Kemasan -->
+                            <div id="section-packaging" class="detail-section">
+                                <h3>Kemasan</h3>
+                                <form id="packaging-form" class="form">
+                                    <div class="form-group">
+                                        <label for="packaging-name">Nama Kemasan</label>
+                                        <input type="text" id="packaging-name" placeholder="Contoh: Kotak Kecil" required>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="packaging-size">Ukuran</label>
+                                            <input type="text" id="packaging-size" placeholder="Contoh: 500g" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="packaging-price">Harga per Kemasan</label>
+                                            <div class="input-group">
+                                                <span class="currency">Rp</span>
+                                                <input type="number" id="packaging-price" placeholder="0" min="0" step="0.01" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Tambah Kemasan</button>
+                                </form>
+
+                                <!-- Tabel Kemasan -->
+                                <div class="packaging-table-section">
+                                    <h4>Daftar Kemasan</h4>
+                                    <div id="packaging-table-container" class="table-container">
+                                        <table id="packaging-table" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Kemasan</th>
+                                                    <th>Ukuran</th>
+                                                    <th>Harga</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="packaging-tbody"></tbody>
+                                        </table>
+                                    </div>
+                                    <div id="no-packaging" class="empty-state">Belum ada kemasan</div>
+                                </div>
+                            </div>
+
+                            <!-- Section: Kalkulasi HPP -->
+                            <div id="section-calculation" class="detail-section">
+                                <h3>Kalkulasi HPP</h3>
+                                <div class="calculation-result">
+                                    <div class="result-grid">
+                                        <div class="result-card">
+                                            <label>Total Biaya Bahan</label>
+                                            <div class="result-value" id="total-ingredient-cost">Rp 0</div>
+                                        </div>
+                                        <div class="result-card">
+                                            <label>Total Biaya Kemasan</label>
+                                            <div class="result-value" id="total-packaging-cost">Rp 0</div>
+                                        </div>
+                                        <div class="result-card">
+                                            <label>Total HPP Produk</label>
+                                            <div class="result-value highlight" id="total-hpp">Rp 0</div>
+                                        </div>
+                                        <div class="result-card">
+                                            <label>HPP per Satuan</label>
+                                            <div class="result-input">
+                                                <input type="number" id="hpp-per-unit-input" placeholder="Masukkan jumlah" min="0.01" step="0.01">
+                                                <span id="hpp-per-unit-result">Rp 0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Export Buttons -->
+                                    <div class="export-section">
+                                        <button id="export-pdf-btn" class="btn btn-secondary">📄 Unduh PDF</button>
+                                        <button id="export-excel-btn" class="btn btn-secondary">📊 Unduh Excel</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section: Rekomendasi -->
+                            <div id="section-recommendations" class="detail-section">
+                                <h3>Rekomendasi Pembelian Bahan Baku</h3>
+                                <div id="recommendations-container" class="recommendations-container">
+                                    <p class="empty-state">Tidak ada rekomendasi pembelian saat ini</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- Tab Informasi -->
+            <section id="info-tab" class="tab-content">
+                <div class="info-container">
+                    <article class="info-article">
+                        <h2>Apa itu HPP (Harga Pokok Produksi)?</h2>
+                        <p>
+                            Harga Pokok Produksi (HPP) adalah total biaya yang dikeluarkan untuk memproduksi suatu barang atau jasa. 
+                            HPP mencakup semua biaya langsung yang terlibat dalam proses produksi, seperti bahan baku, tenaga kerja langsung, 
+                            dan biaya overhead produksi.
+                        </p>
+
+                        <h3>Fitur Unggulan Kalkulator HPP Cerdas</h3>
+                        <div class="benefits-grid">
+                            <div class="benefit-card">
+                                <h4>🧮 Kalkulasi Akurat</h4>
+                                <p>Hitung HPP dengan detail lengkap termasuk bahan baku dan kemasan.</p>
+                            </div>
+                            <div class="benefit-card">
+                                <h4>📦 Manajemen Kemasan</h4>
+                                <p>Kelola berbagai jenis kemasan dengan harga yang berbeda.</p>
+                            </div>
+                            <div class="benefit-card">
+                                <h4>📍 Tracking Toko</h4>
+                                <p>Catat toko tempat Anda membeli bahan baku untuk referensi.</p>
+                            </div>
+                            <div class="benefit-card">
+                                <h4>📊 Manajemen Stok</h4>
+                                <p>Pantau stok bahan baku dan dapatkan rekomendasi pembelian.</p>
+                            </div>
+                        </div>
+
+                        <h3>Rumus HPP</h3>
+                        <div class="formula-box">
+                            <p><strong>HPP = (Biaya Bahan Baku + Biaya Kemasan) × Jumlah Produk</strong></p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Kalkulator HPP Cerdas. Dibuat untuk membantu UKM dan produsen rumahan.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <script src="app_v2.js"></script>
+</body>
+</html>
